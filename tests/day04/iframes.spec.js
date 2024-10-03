@@ -1,50 +1,54 @@
 import { test, expect } from "@playwright/test";
-import exp from "constants";
 
 test.describe("iFrame Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("https://practice.cydeo.com/iframe");
   });
 
-  test("Locate the iFrame by ID", async ({ page }) => {
-    let myFrame = page.frameLocator("#mce_0_ifr"); // locating  the iframe
-    // pause for 3 seconds
-    await page.waitForTimeout(3000);
+  test("Locate the iframe by ID", async ({ page }) => {
 
-    let elementInsideIframe = myFrame.locator("//body[@id='tinymce']"); // locating the element with that is in the iframe
+     let myFrame = page.frameLocator("#mce_0_ifr");  // locating the iframe
 
-    await elementInsideIframe.clear(); // clearing
-    await page.waitForTimeout(3000);
+     // pause for 3 seconds
+      await page.waitForTimeout(3000);
+     
+     let elementInsideTheFrame = myFrame.locator("//body[@id='tinymce']"); // locating the element that's inside the iframe
+    
+     await elementInsideTheFrame.clear(); 
 
-    await elementInsideIframe.fill("Hello Cydeo"); // filling the input
-    await page.waitForTimeout(3000);
+     await page.waitForTimeout(3000);
 
-    expect(await elementInsideIframe.innerText()).toBe("Hello Cydeo");
-    await expect(elementInsideIframe).toHaveText("Hello Cydeo");
+     await elementInsideTheFrame.fill("Hello CYDEO");
 
+     await page.waitForTimeout(3000);
+
+     expect(await elementInsideTheFrame.innerText()).toBe("Hello CYDEO");
+
+     await expect(elementInsideTheFrame).toHaveText("Hello CYDEO");
 
   });
 
-  test("Locate the iFrame by CSS", async ({ page }) => {
-    let myFrame = page.frameLocator("iframe.tox-edit-area__iframe"); // locating  the iframe
+  test("Locate the frame by CSS", async ({ page }) => {
+     let myFrame = page.frameLocator("iframe.tox-edit-area__iframe");
+     let elementInsideTheFrame = myFrame.locator("//body[@id='tinymce']");
+/*
+     await page.waitForTimeout(3000);
+     await elementInsideTheFrame.press("Control+A");
+     await page.waitForTimeout(3000);
+     await elementInsideTheFrame.press("Backspace");
+     await page.waitForTimeout(3000);
+     */
 
-    let elementInsideIframe = myFrame.locator("//body[@id='tinymce']"); // locating the element with that is in the iframe
+     await elementInsideTheFrame.press("Control+A", "Backspace");
+     await page.waitForTimeout(3000);
+     await elementInsideTheFrame.fill("Playwright Automation");
+     await page.waitForTimeout(3000);
+     expect(await elementInsideTheFrame.innerText()).toBe("Playwright Automation");
 
-    /*
-    await page.waitForTimeout(3000);
-    await elementInsideIframe.press("Control+A");
-    await page.waitForTimeout(3000);
-    await elementInsideIframe.press("Backspace");
-    await page.waitForTimeout(3000);
-    */
-    await elementInsideIframe.press("Control+A", "Backspace");
-    elementInsideIframe.fill("Playwright Automation");
-    await page.waitForTimeout(3000);
-    expect(await elementInsideIframe.innerText()).toBe("Playwright Automation");
   });
 
-  test("Locate the iFrame by XPATH", async ({ page }) => {
-    let myFrame = page.frameLocator("iframe.tox-edit-area__iframe"); // locating  the iframe
+  test("Locate the frame by Xpath", async ({ page }) => {
+    let myFrame = page.frameLocator("//iframe[@id='mce_0_ifr']");
     let elementInsideTheFrame = myFrame.locator("//body[@id='tinymce']");
 /*
     await page.waitForTimeout(3000);
@@ -60,4 +64,11 @@ test.describe("iFrame Tests", () => {
     await page.waitForTimeout(3000);
     expect(await elementInsideTheFrame.innerText()).toBe("Playwright Automation");
   });
+
+
 });
+
+
+/*
+<body id="tinymce" class="mce-content-body " data-id="mce_0" aria-label="Rich Text Area. Press ALT-0 for help." contenteditable="true" spellcheck="false"><p>Your content goes here.</p></body>
+*/
